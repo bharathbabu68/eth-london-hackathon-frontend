@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Button, ProgressBar, Row, Col } from 'react-bootstrap';
-import { IDKitWidget, VerificationLevel } from '@worldcoin/idkit'; // Import IDKitWidget from Worldcoin IDKit package
+import { IDKitWidget, useIDKit } from '@worldcoin/idkit'
 
 const Campaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
-
+  const [action, setAction] = useState(null); // State variable to store the action value
+  const { open, setOpen } = useIDKit();
 
   useEffect(() => {
-
+    // Simulated static data
     const staticCampaigns = [
       {
         id: 'campaign1',
@@ -29,6 +30,7 @@ const Campaigns = () => {
         fundingWalletAddress: '0x5082f249cdb2f2c1ee035e4f423c46ea2dab3ab1', // Example address
         currentFundBalance: 50000,
       },
+      // Add more campaigns...
       {
         id: 'campaign3',
         title: 'Hurricane Recovery Assistance',
@@ -62,68 +64,70 @@ const Campaigns = () => {
   }, []);
 
   // Function to handle the claim funds button click
-  const handleClaimFunds = (campaignId) => {
-    // Open the IDKit modal for sign-in with World ID
-    document.getElementById(`idkit-button-${campaignId}`).click();
-  };
-
-  const onSuccess = () => {
-    // This is where you should perform any actions after the modal is closed
-    // Such as redirecting the user to a new page
-    // window.location.href = "/success";
+  const handleClaimFunds = (campaign) => {
+    setAction(campaign.id); // Set the action value to the campaign's ID
+    setOpen(true);
   };
 
   const handleVerify = async (proof) => {
-    proof = JSON.stringify(proof)
-    console.log(proof)
-    return
-    const res = await fetch("/api/verify", { // route to your backend will depend on implementation
+    const res = await fetch("http://localhost:4000/api/verifyProof", { // route to your backend will depend on implementation
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(proof),
+        body: JSON.stringify({
+            "proof": proof,
+            "action": action,
+        })
     })
     if (!res.ok) {
-        throw new Error("Verification failed."); // IDKit will display the error message to the user in the modal
+        setOpen(false)
+        alert("User has already claimed the relief value!")
     }
 };
 
+const onSuccess = () => {
+    // This is where you should perform any actions after the modal is closed
+    // Such as redirecting the user to a new page
+    window.location.href = "/success";
+};
+
+
+
   return (
-    <Container style={{ minHeight: '100vh', backgroundImage: 'linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%)', fontFamily: 'Roboto', textAlign: 'left' }} fluid>
-      <h4 style={{ textAlign: 'left', paddingTop: '2%' }}>Active Relief Campaigns</h4>
-      <p>Displayed are a list of active campaigns to help people affected by disasters.</p>
-      <Row>
-        {campaigns.map((campaign) => (
-          <Col md={4} key={campaign.id} style={{ marginBottom: '20px' }}>
-            <Card style={{ height: '100%' }}>
-              <Card.Body>
-                <Card.Title>{campaign.title}</Card.Title>
-                <Card.Text>{campaign.description}</Card.Text>
-                <Card.Text>Total Fund Amount: {campaign.totalFundAmount}</Card.Text>
-                <Card.Text>Relief Aid Per Person: {campaign.reliefAidPerPerson}</Card.Text>
-                <Card.Text>Funding Organization: {campaign.fundingOrganization}</Card.Text>
-                <Card.Text>Funding Wallet Address: <a href={`https://mumbai.polygonscan.com/address/${campaign.fundingWalletAddress}`} target="_blank" rel="noopener noreferrer">{campaign.fundingWalletAddress}</a></Card.Text>
-                <Card.Text>Current Fund Balance: {campaign.currentFundBalance}</Card.Text>
-                <ProgressBar now={campaign.claimedPercentage} label={`${campaign.claimedPercentage.toFixed(2)}% claimed`} />
-                <Button variant="primary" style={{ marginTop: '10px' }} onClick={() => handleClaimFunds(campaign.id)}>Claim Funds</Button>
-              </Card.Body>
-            </Card>
-            <IDKitWidget
-              app_id={process.env.REACT_APP_WORLDCOIN_APP_ID} // obtained from the Developer Portal
-              action={campaign.id} // Use campaign ID as action ID
-              verification_level={VerificationLevel.Device}
-              onSuccess={onSuccess} // callback when the modal is closed
-              handleVerify={handleVerify} // callback when the proof is received
-            >
-              {({ open }) => (
-                <button id={`idkit-button-${campaign.id}`} style={{ display: 'none' }} onClick={open}>Verify with World ID</button>
-              )}
-            </IDKitWidget>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+    <>
+      <IDKitWidget
+        app_id={process.env.REACT_APP_WORLDCOIN_APP_ID} // obtained from the Developer Portal
+        action={action} // Pass the action value
+        onSuccess={onSuccess} // callback when the modal is closed
+        handleVerify={handleVerify} // callback when the proof is received
+        verification_level="device" // Minimum verification level accepted
+      />
+
+      <Container style={{ minHeight: '100vh', backgroundImage: 'linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%)', fontFamily: 'Roboto', textAlign: 'left' }} fluid>
+        <h4 style={{ textAlign: 'left', paddingTop: '2%' }}>Active Relief Campaigns</h4>
+        <p>Displayed are a list of active campaigns to help people affected by disasters.</p>
+        <Row>
+          {campaigns.map((campaign) => (
+            <Col md={4} key={campaign.id} style={{ marginBottom: '20px' }}>
+              <Card style={{ height: '100%' }}>
+                <Card.Body>
+                  <Card.Title>{campaign.title}</Card.Title>
+                  <Card.Text>{campaign.description}</Card.Text>
+                  <Card.Text>Total Fund Amount: {campaign.totalFundAmount}</Card.Text>
+                  <Card.Text>Relief Aid Per Person: {campaign.reliefAidPerPerson}</Card.Text>
+                  <Card.Text>Funding Organization: {campaign.fundingOrganization}</Card.Text>
+                  <Card.Text>Funding Wallet Address: <a href={`https://mumbai.polygonscan.com/address/${campaign.fundingWalletAddress}`} target="_blank" rel="noopener noreferrer">{campaign.fundingWalletAddress}</a></Card.Text>
+                  <Card.Text>Current Fund Balance: {campaign.currentFundBalance}</Card.Text>
+                  <ProgressBar now={campaign.claimedPercentage} label={`${campaign.claimedPercentage.toFixed(2)}% claimed`} />
+                  <Button variant="primary" style={{ marginTop: '10px' }} onClick={() => handleClaimFunds(campaign)}>Claim Funds</Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </>
   );
 };
 
