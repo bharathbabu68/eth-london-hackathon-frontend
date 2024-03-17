@@ -21,7 +21,7 @@ const Campaigns = () => {
         fundingOrganization: campaign.fundingOrganization,
         fundingWalletAddress: campaign.fundingWalletAddress,
         currentFundBalance: campaign.currentFundBalance,
-        claimedPercentage: (campaign.currentFundBalance / campaign.allocatedFundAmount) * 100,
+        claimedPercentage: ((campaign.allocatedFundAmount - campaign.currentFundBalance) / campaign.allocatedFundAmount) * 100,
       }));
       setCampaigns(campaignsWithClaimedPercentage);
     } catch (error) {

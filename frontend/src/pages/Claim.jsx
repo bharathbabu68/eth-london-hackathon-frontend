@@ -12,6 +12,7 @@ const Claim = () => {
     const [address, setAddress] = useState('');
     const [walletAddress, setWalletAddress] = useState('');
     const [campaignDetails, setCampaignDetails] = useState(null);
+    const [claimResponse, setClaimResponse] = useState(null);
 
     // Fetch campaign details by ID
     useEffect(() => {
@@ -32,101 +33,145 @@ const Claim = () => {
     }, [campaignId]);
 
     // Function to handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
         // Perform form submission logic here, e.g., send data to backend
         const formData = {
-            name,
-            email,
-            phoneNumber,
-            address,
-            walletAddress
+            campaignTitle: campaignDetails.campaignTitle,
+            campaignDescription: campaignDetails.campaignDescription,
+            fundDispensePerIndividual: campaignDetails.fundDispensePerIndividual,
+            campaignId: campaignId,
+            name: name,
+            email: email,
+            phone: phoneNumber,
+            address: address,
+            walletAddress: walletAddress,
+            walletId: campaignDetails.walletId,
+            currentFundBalance: campaignDetails.currentFundBalance
         };
 
-        console.log('Form data:', formData);
+        try {
+            const response = await fetch('http://localhost:4000/api/claimFunds', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
 
-        // Reset form fields after submission
-        setName('');
-        setEmail('');
-        setPhoneNumber('');
-        setAddress('');
-        setWalletAddress('');
+            if (!response.ok) {
+                throw new Error('Failed to claim funds');
+            }
+
+            const responseData = await response.json();
+            console.log('Claim funds response:', responseData);
+            
+            // Set the claim response
+            setClaimResponse(responseData);
+
+            // Reset form fields after successful submission
+            setName('');
+            setEmail('');
+            setPhoneNumber('');
+            setAddress('');
+            setWalletAddress('');
+
+            // Display success message to the user
+            alert('Funds claimed successfully! Transaction initiated.');
+        } catch (error) {
+            console.error('Error claiming funds:', error);
+            // Display error message to the user
+            alert('Failed to claim funds. Please try again later.');
+        }
+    };
+
+    // Function to track the transaction ID
+    const trackTransaction = async () => {
+        // Implement the logic to track the transaction ID and return a response
+        // For demonstration purposes, you can display a message
+        alert('Tracking transaction...');
     };
 
     return (
-        <Container style={{ minHeight: '100vh', backgroundImage: 'linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%)', fontFamily: 'Roboto'}} fluid>
-            <Row style={{paddingTop:"3%"}} className="justify-content-center">
+        <Container style={{ minHeight: '100vh', backgroundColor: '#f0f0f0', fontFamily: 'Roboto' }} fluid>
+            <Row style={{ paddingTop: "3%" }} className="justify-content-center">
                 <Col md={8}>
-                    <div>
+                    <div style={{ marginBottom: "20px" }}>
                         <h2>Claim Relief Funds</h2>
                         {campaignDetails && (
                             <>
                                 <p>You are claiming relief funds for the campaign: <strong>{campaignDetails.campaignTitle}</strong></p>
                                 <p><strong>Campaign Description:</strong> {campaignDetails.campaignDescription}</p>
-                                <p><strong>Total Fund Amount:</strong> {campaignDetails.allocatedFundAmount}</p>
                                 <p><strong>Relief Aid Per Person:</strong> {campaignDetails.fundDispensePerIndividual}</p>
                                 <p><strong>Funding Organization:</strong> {campaignDetails.fundingOrganization}</p>
-                                <p><strong>Funding Wallet Address:</strong> {campaignDetails.fundingWalletAddress}</p>
-                                <Form onSubmit={handleSubmit}>
-                                    <Form.Group controlId="formName">
-                                        <Form.Label>Name</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            placeholder="Enter your name" 
-                                            value={name} 
-                                            onChange={(e) => setName(e.target.value)} 
-                                            required 
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formEmail">
-                                        <Form.Label>Email address</Form.Label>
-                                        <Form.Control 
-                                            type="email" 
-                                            placeholder="Enter email" 
-                                            value={email} 
-                                            onChange={(e) => setEmail(e.target.value)} 
-                                            required 
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formPhoneNumber">
-                                        <Form.Label>Phone Number</Form.Label>
-                                        <Form.Control 
-                                            type="tel" 
-                                            placeholder="Enter phone number" 
-                                            value={phoneNumber} 
-                                            onChange={(e) => setPhoneNumber(e.target.value)} 
-                                            required 
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formAddress">
-                                        <Form.Label>Address</Form.Label>
-                                        <Form.Control 
-                                            as="textarea" 
-                                            rows={3} 
-                                            placeholder="Enter your address" 
-                                            value={address} 
-                                            onChange={(e) => setAddress(e.target.value)} 
-                                            required 
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formWalletAddress">
-                                        <Form.Label>Wallet Address</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            placeholder="Enter your wallet address" 
-                                            value={walletAddress} 
-                                            onChange={(e) => setWalletAddress(e.target.value)} 
-                                            required 
-                                        />
-                                    </Form.Group>
-                                    <Button style={{marginTop:"2%"}} variant="primary" type="submit">
-                                        Submit
-                                    </Button>
-                                </Form>
+                                <p><strong>Funding Wallet Address:</strong> <a href={`https://mumbai.polygonscan.com/address/${campaignDetails.fundingWalletAddress}`} target="_blank" rel="noopener noreferrer">{campaignDetails.fundingWalletAddress}</a></p>
                             </>
                         )}
                     </div>
+                    {claimResponse && (
+                        <div style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '20px', marginBottom: '20px' }}>
+                            <p>This is the claim funds response - <strong>{claimResponse.id}</strong></p>
+                            <p>Transaction has been initiated.</p>
+                            <Button onClick={trackTransaction} variant="info">Track Transaction</Button>
+                        </div>
+                    )}
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group style={{ marginBottom: "2%" }} controlId="formName">
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter your name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group style={{ marginBottom: "2%" }} controlId="formEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control
+                                type="email"
+                                placeholder="Enter email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group style={{ marginBottom: "2%" }} controlId="formPhoneNumber">
+                            <Form.Label>Phone Number</Form.Label>
+                            <Form.Control
+                                type="tel"
+                                placeholder="Enter phone number"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group style={{ marginBottom: "2%" }} controlId="formAddress">
+                            <Form.Label>Address</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                placeholder="Enter your address"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group style={{ marginBottom: "2%" }} controlId="formWalletAddress">
+                            <Form.Label>Wallet Address</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter your wallet address"
+                                value={walletAddress}
+                                onChange={(e) => setWalletAddress(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Button style={{ marginTop: "2%", marginBottom: "2%" }} variant="primary" type="submit">
+                            Claim Funds
+                        </Button>
+                    </Form>
                 </Col>
             </Row>
         </Container>
