@@ -45,6 +45,10 @@ To get started with the Disaster Relief Aid Platform, follow these steps:
 5. Implement gas fee abstraction using Circle's gas station.
 6. Explore future integrations with Circle's Access Network and verification layer.
 
+## NFT Contract Address
+- Chiliz Network = 0x20aBdCf9004cBAE87A2459A075261d2Bb4cb1339 (https://testnet.chiliscan.com/address/0x20aBdCf9004cBAE87A2459A075261d2Bb4cb1339)
+- Arbitrum Sepolia Network = 0x86EcCA95fECDb515d068975b75eaC4357d6E86C5 (https://sepolia-explorer.arbitrum.io/address/0x86EcCA95fECDb515d068975b75eaC4357d6E86C5)
+
 ## Contribution
 
 Contributions are welcome! Feel free to open issues or submit pull requests to improve the platform.
