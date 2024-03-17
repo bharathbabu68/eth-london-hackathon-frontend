@@ -89,7 +89,7 @@ const Campaigns = () => {
 const onSuccess = () => {
     // This is where you should perform any actions after the modal is closed
     // Such as redirecting the user to a new page
-    window.location.href = "/success";
+    window.location.href = `/claim/${action}`;
 };
 
 
@@ -120,7 +120,7 @@ const onSuccess = () => {
                   <Card.Text>Funding Wallet Address: <a href={`https://mumbai.polygonscan.com/address/${campaign.fundingWalletAddress}`} target="_blank" rel="noopener noreferrer">{campaign.fundingWalletAddress}</a></Card.Text>
                   <Card.Text>Current Fund Balance: {campaign.currentFundBalance}</Card.Text>
                   <ProgressBar now={campaign.claimedPercentage} label={`${campaign.claimedPercentage.toFixed(2)}% claimed`} />
-                  <Button variant="primary" style={{ marginTop: '10px' }} onClick={() => handleClaimFunds(campaign)}>Claim Funds</Button>
+                  <Button variant="outline-primary" style={{ marginTop: '20px' }} onClick={() => handleClaimFunds(campaign)}>Verify World ID</Button>
                 </Card.Body>
               </Card>
             </Col>
