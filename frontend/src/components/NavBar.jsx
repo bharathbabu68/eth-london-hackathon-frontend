@@ -6,12 +6,18 @@ import {Link} from 'react-router-dom'
 
 const NavBar = () => {
 	return (
-		<Navbar style={{fontFamily: "Roboto"}} bg="dark" data-bs-theme="dark">
+		<Navbar style={{fontFamily: "Roboto", fontWeight:"bold"}} bg="dark" data-bs-theme="dark">
 			<Container fluid>
 				<Navbar.Brand as={Link} to="/">
 					CryptoRelief 🛟
 				</Navbar.Brand>
 				<Nav className="me-auto">
+					<Nav.Link as={Link} to="/campaigns">
+						Campaigns
+					</Nav.Link>
+					<Nav.Link as={Link} to="/admin">
+						Admin
+					</Nav.Link>
 				</Nav>
 			</Container>
 		</Navbar>

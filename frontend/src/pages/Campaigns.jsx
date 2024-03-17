@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Button, ProgressBar, Row, Col } from 'react-bootstrap';
-import { IDKitWidget, useIDKit } from '@worldcoin/idkit'
+import { IDKitWidget, useIDKit } from '@worldcoin/idkit';
 
 const Campaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
@@ -16,8 +16,8 @@ const Campaigns = () => {
         id: campaign._id,
         title: campaign.campaignTitle,
         description: campaign.campaignDescription,
-        totalFundAmount: campaign.allocatedFundAmount,
-        reliefAidPerPerson: campaign.fundDispensePerIndividual,
+        totalFundAmount: `${campaign.allocatedFundAmount} USDC`, // Add "USDC" next to the total fund amount
+        reliefAidPerPerson: `${campaign.fundDispensePerIndividual} USDC`, // Add "USDC" next to the amount
         fundingOrganization: campaign.fundingOrganization,
         fundingWalletAddress: campaign.fundingWalletAddress,
         currentFundBalance: campaign.currentFundBalance,

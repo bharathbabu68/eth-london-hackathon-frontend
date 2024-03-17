@@ -14,12 +14,12 @@ const Home = () => {
             </Col>
             <Col style={{border:"1px solid black", borderRadius:"10px", padding:"1%", margin:"1%", width:"20%"}} md={4}>
                 <i class="fa-solid fa-gas-pump fa-xl"></i>
-                <p style={{marginTop:"3%"}}>No gas fees, powered by Circle Gas Station</p>
+                <p style={{marginTop:"3%"}}>Gas fees abstracted away by Circle Gas Station</p>
                 
             </Col>
             <Col style={{border:"1px solid black", borderRadius:"10px", padding:"1%", margin:"1%", width:"20%"}} md={4}>
             <i class="fa-solid fa-user-large fa-xl"></i>
-                <p style={{marginTop:"3%"}}>Receive your SBT, with Sybil guarantees using Worldcoin</p>
+                <p style={{marginTop:"3%"}}>Use your World ID to claim your aid permissionlessly</p>
                 
             </Col>
 

@@ -15,7 +15,7 @@ const Main = () => {
             <Route path="/" element={<Home />} />
             <Route path="/campaigns" element={<Campaigns />} />
             <Route path="/claim/:campaignId" element={<Claim />} />
-            <Route path="/create" element={<CreateCampaign />} />
+            <Route path="/admin" element={<CreateCampaign />} />
         </Routes>
     </BrowserRouter>
 </>

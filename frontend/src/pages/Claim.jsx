@@ -126,20 +126,19 @@ const Claim = () => {
                         </div>
                     )}
                     {transactionStatus && transactionStatus.transaction && (
-    <div style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '20px', marginBottom: '20px' }}>
-        <h5>Transaction Details</h5>
-        <p><strong>Transaction ID:</strong> {transactionStatus.transaction.id}</p>
-        <p><strong>Blockchain:</strong> {transactionStatus.transaction.blockchain}</p>
-        <p><strong>Source Address:</strong> {transactionStatus.transaction.sourceAddress}</p>
-        <p><strong>Destination Address:</strong> {transactionStatus.transaction.destinationAddress}</p>
-        <p><strong>Transaction Type:</strong> {transactionStatus.transaction.transactionType}</p>
-        <p><strong>State:</strong> {transactionStatus.transaction.state}</p>
-        <p><strong>Transaction Hash:</strong> {transactionStatus.transaction.userOpHash}</p>
-        <p><strong>Operation:</strong> {transactionStatus.transaction.operation}</p>
-        <p><strong>Fee Level:</strong> {transactionStatus.transaction.feeLevel}</p>
-    </div>
-)}
-
+                        <div style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '20px', marginBottom: '20px' }}>
+                            <h5>Transaction Details</h5>
+                            <p><strong>Transaction ID:</strong> {transactionStatus.transaction.id}</p>
+                            <p><strong>Blockchain:</strong> {transactionStatus.transaction.blockchain}</p>
+                            <p><strong>Source Address:</strong> {transactionStatus.transaction.sourceAddress}</p>
+                            <p><strong>Destination Address:</strong> {transactionStatus.transaction.destinationAddress}</p>
+                            <p><strong>Transaction Type:</strong> {transactionStatus.transaction.transactionType}</p>
+                            <p><strong>State:</strong> {transactionStatus.transaction.state}</p>
+                            <p><strong>Transaction Hash:</strong> {transactionStatus.transaction.userOpHash}</p>
+                            <p><strong>Operation:</strong> {transactionStatus.transaction.operation}</p>
+                            <p><strong>Fee Level:</strong> {transactionStatus.transaction.feeLevel}</p>
+                        </div>
+                    )}
 
                     <Form onSubmit={handleSubmit}>
                         <Form.Group style={{ marginBottom: "2%" }} controlId="formName">
