@@ -1,5 +1,7 @@
 # Disaster Relief Aid Platform - ETHLondon 2024
 
+![Platform Architecture](https://github.com/bharathbabu68/eth-london-hackathon-frontend/blob/main/CryptoRelief.jpg)
+
 ## Introduction
 
 Welcome to the Disaster Relief Aid Platform, a project developed for the ETH London Hackathon. This platform leverages Circle's USDC stablecoin for efficient fund transfers and payouts in disaster relief scenarios. Traditional methods of distributing aid, involving physical cash, are cumbersome and slow. With this platform, organizations like UNICEF can create campaigns contributing USDC towards disaster relief, enabling faster and more efficient aid distribution to those in need.
